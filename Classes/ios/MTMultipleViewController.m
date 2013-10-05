@@ -63,8 +63,9 @@
 - (void)setViewControllers:(NSArray *)viewControllers {
 	_viewControllers = viewControllers;
 	[self setupSegmentedControl];
+	self.selectedIndex = 0;
 	if(viewControllers.count) {
-		[self makeViewControllerVisible:self.viewControllers.firstObject];
+		[self makeViewControllerVisible:self.viewControllers[self.selectedIndex]];
 	}
 }
 
