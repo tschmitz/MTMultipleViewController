@@ -11,8 +11,10 @@
 
 @interface MTMultipleViewController : UIViewController
 @property(nonatomic) NSUInteger selectedIndex;
-@property(nonatomic, readonly) NSArray *viewControllers;
+@property(nonatomic) NSArray *viewControllers;
 @property(nonatomic,weak) id<MTMultipleViewControllerDelegate> delegate;
+@property(nonatomic, weak) IBOutlet UISegmentedControl *segmentedControl;
+@property(nonatomic, weak) IBOutlet UIView *childViewArea;
 
 @property(nonatomic) BOOL lockedTitle;
 @property(nonatomic) BOOL lockedPrompt;
@@ -23,9 +25,6 @@
 @property(nonatomic) BOOL lockedLeftBarButtonItem;
 @property(nonatomic) BOOL lockedRightBarButtonItems;
 @property(nonatomic) BOOL lockedRightBarButtonItem;
-
-- (void)addViewController:(UIViewController *)controller;
-- (void)insertViewController:(UIViewController *)controller atIndex:(NSUInteger)index;
 
 @end
 

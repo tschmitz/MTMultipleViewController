@@ -8,7 +8,6 @@
 #import "MTMultipleViewController.h"
 
 @interface MTMultipleViewController ()
-@property(nonatomic, strong) NSMutableArray *internalViewControllers;
 @end
 
 @implementation MTMultipleViewController
@@ -31,45 +30,43 @@
 }
 
 - (void)setupInitialState {
-  self.internalViewControllers = [NSMutableArray array];
-  UISegmentedControl *titleView = [[UISegmentedControl alloc] initWithItems:[self.viewControllers valueForKeyPath:@"navigationItem.title"]];
-  titleView.segmentedControlStyle = UISegmentedControlStyleBar;
-  [titleView addTarget:self action:@selector(selectedButtonChanged:) forControlEvents:UIControlEventValueChanged];
-  self.navigationItem.titleView = titleView;
+	_viewControllers = [NSMutableArray array];
+	[self setupSegmentedControl];
+	[self.segmentedControl addTarget:self action:@selector(selectedButtonChanged:) forControlEvents:UIControlEventValueChanged];
+}
+
+- (void)setupSegmentedControl {
+	[self.segmentedControl removeAllSegments];
+	for(UIViewController *controller in self.viewControllers) {
+		[self.segmentedControl insertSegmentWithTitle:controller.navigationItem.title atIndex:[self.viewControllers indexOfObject:controller] animated:NO];
+	}
 }
 
 #pragma mark - View lifecycle
 
 
 - (void)viewDidLoad {
-  [self makeViewControllerVisible:self.viewControllers[self.selectedIndex]];
+	if(self.viewControllers.count) {
+	  [self makeViewControllerVisible:self.viewControllers[self.selectedIndex]];
+	}
 }
 
 - (void)viewDidUnload {
-  [self makeViewControllerInvisible:self.viewControllers[self.selectedIndex]];
+	if(self.viewControllers.count) {
+	  [self makeViewControllerInvisible:self.viewControllers[self.selectedIndex]];
+	}
 }
 
 
 #pragma mark - Public access methods
 
-- (NSArray *)viewControllers {
-  return [self.internalViewControllers copy];
+- (void)setViewControllers:(NSArray *)viewControllers {
+	_viewControllers = viewControllers;
+	[self setupSegmentedControl];
+	if(viewControllers.count) {
+		[self makeViewControllerVisible:self.viewControllers.firstObject];
+	}
 }
-
-- (void)addViewController:(UIViewController *)controller {
-  [self insertViewController:controller atIndex:self.viewControllers.count];
-}
-
-
-- (void)insertViewController:(UIViewController *)controller atIndex:(NSUInteger)index {
-  [self.internalViewControllers insertObject:controller atIndex:index];
-  [self addChildViewController:controller];
-  [((UISegmentedControl *)self.navigationItem.titleView) insertSegmentWithTitle:[[controller navigationItem] title] atIndex:index animated:NO];
-  if (((UISegmentedControl *)self.navigationItem.titleView).selectedSegmentIndex == -1) {
-    ((UISegmentedControl *)self.navigationItem.titleView).selectedSegmentIndex = 0;
-  }
-}
-
 
 - (void)setSelectedIndex:(NSUInteger)selectedIndex {
   if (selectedIndex != _selectedIndex) {
@@ -123,9 +120,17 @@
   if (!self.lockedRightBarButtonItem) {
     self.navigationItem.rightBarButtonItem = newController.navigationItem.rightBarButtonItem;
   }
-  newController.view.frame = self.view.bounds;
+	
+	UIView *targetView;
+	if(self.childViewArea) {
+		targetView = self.childViewArea;
+	} else {
+		targetView = self.view;
+	}
+	
+  newController.view.frame = targetView.bounds;
   [newController beginAppearanceTransition:YES animated:NO];
-  [self.view addSubview:newController.view];
+  [targetView addSubview:newController.view];
   [newController endAppearanceTransition];
 }
 
