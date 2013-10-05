@@ -32,7 +32,6 @@
 - (void)setupInitialState {
 	_viewControllers = [NSMutableArray array];
 	[self setupSegmentedControl];
-	[self.segmentedControl addTarget:self action:@selector(selectedButtonChanged:) forControlEvents:UIControlEventValueChanged];
 }
 
 - (void)setupSegmentedControl {
@@ -65,6 +64,7 @@
 	[self setupSegmentedControl];
 	self.selectedIndex = 0;
 	if(viewControllers.count) {
+		self.segmentedControl.selectedSegmentIndex = 0;
 		[self makeViewControllerVisible:self.viewControllers[self.selectedIndex]];
 	}
 }
@@ -76,7 +76,7 @@
 
     _selectedIndex = selectedIndex;
 
-    ((UISegmentedControl *)self.navigationItem.titleView).selectedSegmentIndex = selectedIndex;
+    self.segmentedControl.selectedSegmentIndex = selectedIndex;
 
     if ([self.delegate respondsToSelector:@selector(multipleViewController:didChangeSelectedViewControllerIndex:)]) {
       [self.delegate multipleViewController:self didChangeSelectedViewControllerIndex:selectedIndex];
