@@ -31,6 +31,10 @@
 
 - (void)setupInitialState {
 	_viewControllers = [NSMutableArray array];
+	if(!_segmentedControl) {
+		_segmentedControl = [[UISegmentedControl alloc] initWithFrame:CGRectMake(0, 0, 300, 29)];
+		[_segmentedControl addTarget:self action:@selector(selectedButtonChanged:) forControlEvents:UIControlEventValueChanged];
+	}
 	[self setupSegmentedControl];
 }
 

@@ -13,7 +13,7 @@
 @property(nonatomic) NSUInteger selectedIndex;
 @property(nonatomic) NSArray *viewControllers;
 @property(nonatomic,weak) id<MTMultipleViewControllerDelegate> delegate;
-@property(nonatomic, weak) IBOutlet UISegmentedControl *segmentedControl;
+@property(nonatomic, strong) IBOutlet UISegmentedControl *segmentedControl;
 @property(nonatomic, weak) IBOutlet UIView *childViewArea;
 
 @property(nonatomic) BOOL lockedTitle;
