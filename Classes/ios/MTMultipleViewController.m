@@ -133,17 +133,21 @@
 		targetView = self.view;
 	}
 	
+	[self addChildViewController:newController];
   newController.view.frame = targetView.bounds;
   [newController beginAppearanceTransition:YES animated:NO];
   [targetView addSubview:newController.view];
   [newController endAppearanceTransition];
+	[newController didMoveToParentViewController:self];
 }
 
 
 - (void)makeViewControllerInvisible:(UIViewController *)oldController {
+	[oldController willMoveToParentViewController:nil];
   [oldController beginAppearanceTransition:NO animated:NO];
   [oldController.view removeFromSuperview];
   [oldController endAppearanceTransition];
+	[oldController removeFromParentViewController];
 }
 
 @end
